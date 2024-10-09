@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Score</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+    background-color: #f3ec78; /* Set a light background color */
+}
+#score {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+.compliment {
+    margin-top: 50px;
+    font-size: 40px;
+}
+.badge {
+    margin-top: 100px;
+    max-width: 200px; /* Adjust badge size as needed */
+}
+.good {
+    color: #28a745; /* Green color for positive statement */
+    
+}
+.encourage {
+    color: #dc3545; /* Red color for encouragement */
+}
+.awesome {
+    color: #007bff; /* Blue color for awesome compliments */
+}
+    </style>
+</head>
+<body>
+
+<div id="score">
+    <!-- The score will be displayed here -->
+</div>
+
+<div class="compliment" id="compliment">
+    <!-- Compliment message based on score will be displayed here -->
+</div>
+
+<div class="badge-container" id="badgeContainer">
+    <!-- Badge images will be displayed here -->
+</div>
+
+<script>
+    // Extract the score and total questions from the query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const score = parseInt(urlParams.get('score'));
+    const totalQuestions = parseInt(urlParams.get('totalQuestions'));
+
+    // Display the score on the page
+    const scoreElement = document.getElementById("score");
+    scoreElement.textContent = `Your Score: ${score} out of ${totalQuestions}`;
+
+    // Display compliment based on the score
+    const complimentElement = document.getElementById("compliment");
+    if (score >= 9) {
+        complimentElement.textContent = "🎉 Congratulations! You did an awesome job!";
+        complimentElement.classList.add("awesome");
+        displayBadge("OIG1.jpg");
+    } else if (score >= 5) {
+        complimentElement.textContent = "👍 Great job! Keep it up and try remaining quizzes.";
+        complimentElement.classList.add("good");
+        displayBadge("OIG2.jpg");
+    } else {
+        complimentElement.textContent = "📚 Don't worry! Keep learning and revise the concepts.";
+        complimentElement.classList.add("encourage");
+        displayBadge("OIG3.jpg");
+    }
+
+    // Function to display badge image
+    function displayBadge(imageSrc) {
+        const badgeContainer = document.getElementById("badgeContainer");
+        const badgeImg = document.createElement("img");
+        badgeImg.src = imageSrc;
+        badgeImg.alt = "Badge";
+        badgeImg.classList.add("badge");
+        badgeContainer.appendChild(badgeImg);
+    }
+</script>
+
+</body>
+</html>

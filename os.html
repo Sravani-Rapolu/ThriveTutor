@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems Quiz</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f3ec78, #af4261);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Ensure no overflow with animation */
+}
+
+.quiz-container {
+    width: 80%;
+    max-width: 600px; /* Maximum width for content */
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    position: relative;
+    animation: backgroundAnimation 20s infinite;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.question {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.options {
+    margin-top: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.option-input {
+    display: none; /* Hide default radio button */
+}
+
+.custom-radio {
+    position: relative;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.custom-radio::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px; /* Adjust size as needed */
+    height: 12px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: #007bff;
+    display: none;
+}
+
+.option-input:checked + .custom-radio::after {
+    display: block; /* Show inner circle when radio is checked */
+}
+
+.option-label {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.option-label:hover {
+    background-color: #f0f0f0;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+#score {
+    text-align: center;
+    font-size: 1.5em;
+    color: #28a745;
+    margin-top: 20px;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Operating Systems Quiz</h1>
+    <div class="question" id="question">
+        <!-- Question content will be displayed here -->
+    </div>
+    
+    <div class="options" id="options">
+        <!-- Options will be displayed here as radio buttons -->
+    </div>
+
+    <button onclick="nextQuestion()" id="nextBtn">Next</button>
+    <button onclick="submitQuiz()" id="submitBtn" style="display:none;">Submit</button>
+
+    <div id="score" style="display:none;">
+        <!-- Score will be displayed here -->
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Which of the following is not an operating system?",
+            options: ["Windows", "Linux", "Oracle", "Mac OS"],
+            correctAnswer: "Oracle"
+        },
+        {
+            question: "What does CPU stand for?",
+            options: ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit", "Central Processor Unit"],
+            correctAnswer: "Central Processing Unit"
+        },
+        {
+            question: "Which of the following is a real-time operating system?",
+            options: ["Windows XP", "Ubuntu", "RTLinux", "DOS"],
+            correctAnswer: "RTLinux"
+        },
+        {
+            question: "What is the maximum length of the filename in DOS?",
+            options: ["5", "8", "12", "16"],
+            correctAnswer: "8"
+        },
+        {
+            question: "Which of the following is the core of an operating system?",
+            options: ["Shell", "Kernel", "Command", "Script"],
+            correctAnswer: "Kernel"
+        },
+        {
+            question: "Which operating system is developed by Apple?",
+            options: ["Windows", "Linux", "Mac OS", "Unix"],
+            correctAnswer: "Mac OS"
+        },
+        {
+            question: "What is the name of the first operating system?",
+            options: ["Windows", "Mac OS", "Linux", "DOS"],
+            correctAnswer: "DOS"
+        },
+        {
+            question: "Which of the following is used to manage hardware and software resources in a computer?",
+            options: ["Application software", "System software", "Operating system", "Firmware"],
+            correctAnswer: "Operating system"
+        },
+        {
+            question: "What is the main function of the command interpreter?",
+            options: ["To provide the interface between the API and application program", "To handle the files in the operating system", "To get and execute the next user-specified command", "To allocate resources to processes"],
+            correctAnswer: "To get and execute the next user-specified command"
+        },
+        {
+            question: "Which of the following operating systems does not support networking between computers?",
+            options: ["Windows 3.1", "Windows 95", "Windows 2000", "Windows NT"],
+            correctAnswer: "Windows 3.1"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function displayQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+
+        const currentQuestion = questions[currentQuestionIndex];
+        questionElement.textContent = currentQuestion.question;
+
+        optionsElement.innerHTML = "";
+        currentQuestion.options.forEach((option, index) => {
+            const optionItem = document.createElement("div");
+            optionItem.classList.add("option-item");
+
+            const radioBtn = document.createElement("input");
+            radioBtn.type = "radio";
+            radioBtn.classList.add("option-input");
+            radioBtn.name = "option";
+            radioBtn.id = "option" + index;
+            radioBtn.value = option;
+
+            const customRadio = document.createElement("div");
+            customRadio.classList.add("custom-radio");
+            customRadio.onclick = () => {
+                radioBtn.checked = true;
+            };
+
+            const label = document.createElement("label");
+            label.textContent = option;
+            label.classList.add("option-label");
+            label.setAttribute("for", "option" + index);
+
+            optionItem.appendChild(radioBtn);
+            optionItem.appendChild(customRadio);
+            optionItem.appendChild(label);
+            optionsElement.appendChild(optionItem);
+        });
+
+        document.getElementById("nextBtn").style.display = "block";
+        document.getElementById("submitBtn").style.display = "none";
+    }
+
+    function nextQuestion() {
+        const selectedOption = document.querySelector('input[name="option"]:checked');
+
+        if (selectedOption) {
+            if (selectedOption.value === questions[currentQuestionIndex].correctAnswer) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showScore();
+            }
+        } else {
+            alert("Please select an option");
+        }
+    }
+
+    function showScore() {
+        const scoreElement = document.getElementById("score");
+        scoreElement.textContent = `You scored ${score} out of ${questions.length}`;
+        scoreElement.style.display = "block";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("submitBtn").style.display = "block";
+    }
+
+    function submitQuiz() {
+        // Redirect to the score page with the score as a query parameter
+        window.location.href = `score.html?score=${score}&totalQuestions=${questions.length}`;
+    }
+
+    // Initial display
+    displayQuestion();
+</script>
+
+</body>
+</html>

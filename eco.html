@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economy Quiz</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #f3ec78, #af4261);
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden; /* Ensure no overflow with animation */
+    }
+    
+    .quiz-container {
+        width: 80%;
+        max-width: 600px; /* Maximum width for content */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        background-color: #ffffff;
+        position: relative;
+        animation: backgroundAnimation 20s infinite;
+    }
+    
+    @keyframes backgroundAnimation {
+        0% {
+            background-position: 0% 0%;
+        }
+        50% {
+            background-position: 100% 100%;
+        }
+        100% {
+            background-position: 0% 0%;
+        }
+    }
+    
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    
+    .question {
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    
+    .options {
+        margin-top: 10px;
+    }
+    
+    .option-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    
+    .option-input {
+        display: none; /* Hide default radio button */
+    }
+    
+    .custom-radio {
+        position: relative;
+        width: 20px; /* Adjust size as needed */
+        height: 20px; /* Adjust size as needed */
+        border-radius: 50%;
+        border: 2px solid #007bff;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    
+    .custom-radio::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px; /* Adjust size as needed */
+        height: 12px; /* Adjust size as needed */
+        border-radius: 50%;
+        background-color: #007bff;
+        display: none;
+    }
+    
+    .option-input:checked + .custom-radio::after {
+        display: block; /* Show inner circle when radio is checked */
+    }
+    
+    .option-label {
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    
+    .option-label:hover {
+        background-color: #f0f0f0;
+    }
+    
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+    
+    button:active {
+        background-color: #004085;
+        transform: translateY(0);
+    }
+    
+    #score {
+        text-align: center;
+        font-size: 1.5em;
+        color: #28a745;
+        margin-top: 20px;
+    }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Economy Quiz</h1>
+    <div class="question" id="question">
+        <!-- Question content will be displayed here -->
+    </div>
+    
+    <div class="options" id="options">
+        <!-- Options will be displayed here as radio buttons -->
+    </div>
+
+    <button onclick="nextQuestion()" id="nextBtn">Next</button>
+    <button onclick="submitQuiz()" id="submitBtn" style="display:none;">Submit</button>
+
+    <div id="score" style="display:none;">
+        <!-- Score will be displayed here -->
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "1.   What is GDP?",
+            options: ["Gross Domestic Product", "Global Domestic Product", "Gross Development Product", "General Domestic Product"],
+            correctAnswer: "Gross Domestic Product"
+        },
+        {
+            question: "2.   Which of the following is a type of unemployment?",
+            options: ["Frictional", "Sectoral", "Positional", "Situational"],
+            correctAnswer: "Frictional"
+        },
+        {
+            question: "3.   What does inflation measure?",
+            options: ["Increase in general price level", "Decrease in general price level", "Increase in production", "Decrease in production"],
+            correctAnswer: "Increase in general price level"
+        },
+        {
+            question: "4    What is a market economy?",
+            options: ["An economy where supply and demand determine prices", "An economy controlled by the government", "An economy with no competition", "An economy with only one product"],
+            correctAnswer: "An economy where supply and demand determine prices"
+        },
+        {
+            question: "5    What is fiscal policy?",
+            options: ["Government spending and tax policies", "Policies related to money supply", "Policies related to international trade", "Policies related to labor market"],
+            correctAnswer: "Government spending and tax policies"
+        },
+        {
+            question: "6    What is the law of demand?",
+            options: ["When prices rise, demand falls", "When prices rise, demand rises", "When supply rises, demand falls", "When supply rises, demand rises"],
+            correctAnswer: "When prices rise, demand falls"
+        },
+        {
+            question: "7    What is a tariff?",
+            options: ["A tax on imports", "A subsidy for exports", "A quota on imports", "A limit on exports"],
+            correctAnswer: "A tax on imports"
+        },
+        {
+            question: "8    What is a budget deficit?",
+            options: ["When government spends more than it earns", "When government earns more than it spends", "When government spending equals its earnings", "When government does not spend"],
+            correctAnswer: "When government spends more than it earns"
+        },
+        {
+            question: "9    What is the purpose of the central bank?",
+            options: ["To control the nation's money supply", "To control international trade", "To regulate labor markets", "To manage national debt"],
+            correctAnswer: "To control the nation's money supply"
+        },
+        {
+            question: "10   What is a recession?",
+            options: ["A period of economic decline", "A period of economic growth", "A period of high inflation", "A period of high employment"],
+            correctAnswer: "A period of economic decline"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function displayQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+
+        const currentQuestion = questions[currentQuestionIndex];
+        questionElement.textContent = currentQuestion.question;
+
+        optionsElement.innerHTML = "";
+        currentQuestion.options.forEach((option, index) => {
+            const optionItem = document.createElement("div");
+            optionItem.classList.add("option-item");
+
+            const radioBtn = document.createElement("input");
+            radioBtn.type = "radio";
+            radioBtn.classList.add("option-input");
+            radioBtn.name = "option";
+            radioBtn.id = "option" + index;
+            radioBtn.value = option;
+
+            const customRadio = document.createElement("div");
+            customRadio.classList.add("custom-radio");
+            customRadio.onclick = () => {
+                radioBtn.checked = true;
+            };
+
+            const label = document.createElement("label");
+            label.textContent = option;
+            label.classList.add("option-label");
+            label.setAttribute("for", "option" + index);
+
+            optionItem.appendChild(radioBtn);
+            optionItem.appendChild(customRadio);
+            optionItem.appendChild(label);
+            optionsElement.appendChild(optionItem);
+        });
+
+        document.getElementById("nextBtn").style.display = "block";
+        document.getElementById("submitBtn").style.display = "none";
+    }
+
+    function nextQuestion() {
+        const selectedOption = document.querySelector('input[name="option"]:checked');
+
+        if (selectedOption) {
+            if (selectedOption.value === questions[currentQuestionIndex].correctAnswer) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showScore();
+            }
+        } else {
+            alert("Please select an option");
+        }
+    }
+
+    function showScore() {
+        const scoreElement = document.getElementById("score");
+        scoreElement.textContent = `You scored ${score} out of ${questions.length}`;
+        scoreElement.style.display = "block";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("submitBtn").style.display = "block";
+    }
+
+    function submitQuiz() {
+        // Redirect to the score page with the score as a query parameter
+        window.location.href = `score.html?score=${score}&totalQuestions=${questions.length}`;
+    }
+
+    // Initial display
+    displayQuestion();
+</script>
+
+</body>
+</html>

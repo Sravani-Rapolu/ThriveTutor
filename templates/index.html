@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #090909;
+            font-family: 'Arial', sans-serif;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ece8e8;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #b9d3ed;
+            border-radius: 10px;
+            background: #b7c3e1;
+        }
+        .chat-input {
+            margin-top: 10px;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .response-message {
+            background-color: #6c757d;
+            color: white;
+            margin-right: auto;
+            text-align: left;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <h3 class="text-center">Chat with AI</h3>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input input-group">
+            <input type="text" id="messageInput" class="form-control" placeholder="Type a message">
+            <div class="input-group-append">
+                <button class="btn btn-primary" id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#sendButton').click(function() {
+                var message = $('#messageInput').val().trim();
+                if (message === "") {
+                    alert("Message cannot be empty");
+                    return;
+                }
+
+                // Display user message
+                $('#chatBox').append('<div class="message user-message">' + message + '</div>');
+                $('#messageInput').val('');
+                $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+
+                // Send POST request
+                $.ajax({
+                    url: '/api',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ message: message }),
+                    success: function(response) {
+                        $('#chatBox').append('<div class="message response-message">' + response + '</div>');
+                        $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#chatBox').append('<div class="message response-message">Error: ' + xhr.responseJSON.error + '</div>');
+                        $('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+                    }
+                });
+            });
+
+            // Allow pressing enter to send message
+            $('#messageInput').keypress(function(e) {
+                if (e.which == 13) {
+                    $('#sendButton').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

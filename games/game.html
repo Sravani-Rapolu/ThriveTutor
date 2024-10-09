@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAY FOR A WHILE!!</title>
+    <style>
+        body {
+            background-color: blue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button {
+            margin: 10px;
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-buttons">
+        <button type="button" name="game1" onclick="location.href='Hangman.html'">Hangman Game</button>
+        <button type="button" name="game2" onclick="location.href='tictactoe.html'">Tic Tac Toe</button>
+        <button type="button" name="game3" onclick="location.href='wordscramble.html'">Word Scramble Game</button>
+        <button type="button" name="game4" onclick="location.href='Flappybird.html'">Flappy Bird</button>
+    </div>
+</body>
+</html>
